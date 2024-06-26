@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './Header.module.css'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 // import { logout } from '../../Actions/AuthAction'
@@ -15,6 +15,13 @@ function Header({ showPrice }) {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
 	const dispatch = useDispatch()
+	const [selectedHeader, setSelectedHeader] = useState()
+
+	const location = useLocation()
+
+	useEffect(() => {
+		setSelectedHeader(location.pathname.slice(1))
+	}, [location.pathname])
 
 	// State to manage the visibility of the dropdown
 	function handleScroll() {
@@ -80,54 +87,96 @@ function Header({ showPrice }) {
 				</li>
 
 				{/* {isAuthenticated && currentUser.status === 1 && ( */}
-				<li className={styles.hideOnMobile}>
+				<li
+					className={`${
+						selectedHeader === '' ||
+						selectedHeader === 'home' ||
+						selectedHeader === undefined
+							? styles.selectedHeader
+							: styles.hideOnMobile
+					}`}>
 					<Link to="/" id="home" style={{ textDecorationLine: 'none' }}>
 						Home
 					</Link>
 				</li>
 				{/* )} */}
 				{/* {isAuthenticated && currentUser.expansePermission === 'yes' && ( */}
-				<li className={styles.hideOnMobile}>
+				<li
+					className={`${
+						selectedHeader === 'staff'
+							? styles.selectedHeader
+							: styles.hideOnMobile
+					}`}>
 					<Link to="/staff" id="about">
 						Staff
 					</Link>
 				</li>
 				{/* )} */}
 				{/* {isAuthenticated && currentUser.receiptPermission === 'yes' && ( */}
-				<li className={styles.hideOnMobile}>
+				<li
+					className={`${
+						selectedHeader === 'student'
+							? styles.selectedHeader
+							: styles.hideOnMobile
+					}`}>
 					<Link to="/student" id="services">
 						Students
 					</Link>
 				</li>
 				{/* )} */}
 				{/* {isAuthenticated && currentUser.advancePermission === 'yes' && ( */}
-				<li className={styles.hideOnMobile}>
+				<li
+					className={`${
+						selectedHeader === 'class'
+							? styles.selectedHeader
+							: styles.hideOnMobile
+					}`}>
 					<Link to="/class" id="services">
 						Classes
 					</Link>
 				</li>
 				{/* )} */}
 				{/* {isAuthenticated && currentUser.loanPermission === 'yes' && ( */}
-				<li className={styles.hideOnMobile}>
+				<li
+					className={`${
+						selectedHeader === 'attendance'
+							? styles.selectedHeader
+							: styles.hideOnMobile
+					}`}>
 					<Link to="/attendance" id="services">
 						Attendance
 					</Link>
 				</li>
 
-				<li className={styles.hideOnMobile}>
+				<li
+					className={`${
+						selectedHeader === 'task'
+							? styles.selectedHeader
+							: styles.hideOnMobile
+					}`}>
 					<Link to="/task" id="services">
 						Tasks
 					</Link>
 				</li>
 
-				<li className={styles.hideOnMobile}>
+				<li
+					className={`${
+						selectedHeader === 'profile'
+							? styles.selectedHeader
+							: styles.hideOnMobile
+					}`}>
 					<Link to="/profile" id="services">
 						Profile
 					</Link>
 				</li>
 				{/* )} */}
 				{/* {isAuthenticated && currentUser.isAdmin === 1 && ( */}
-				<li className={styles.hideOnMobile}>
+				<li
+					className={`${
+						selectedHeader === 'users'
+							? styles.selectedHeader
+							: styles.hideOnMobile
+					}`}>
 					<Link to="/users" id="projects">
 						Users
 					</Link>
@@ -135,7 +184,12 @@ function Header({ showPrice }) {
 				{/* )} */}
 
 				{/* {isAuthenticated && ( */}
-				<li className={styles.hideOnMobile}>
+				<li
+					className={`${
+						selectedHeader === 'staff'
+							? styles.selectedHeader
+							: styles.hideOnMobile
+					}`}>
 					<Link to="/login" onClick={logOutHandler}>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"

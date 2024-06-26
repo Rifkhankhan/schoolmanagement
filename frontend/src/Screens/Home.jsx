@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import {
+	Button,
 	Card,
 	Carousel,
 	Col,
@@ -8,13 +9,30 @@ import {
 	ListGroup,
 	Row
 } from 'react-bootstrap'
-import { FaArrowRight } from 'react-icons/fa'
+import { FaArrowRight, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import img1 from './../assets/annie-spratt-dWYU3i-mqEo-unsplash.jpg'
 import img2 from './../assets/dmitry-chernyshov-mP7aPSUm7aE-unsplash.jpg'
 import img3 from './../assets/huy-nguyen-YhP-E5YwOGE-unsplash.jpg'
 
 import { updates, news } from './../DummyData'
 import ViewModel from '../Components/UpdateModel/UpdateModel'
+const activities = [
+	'Exams',
+	'Assignments',
+	'Projects',
+	'Quizzes',
+	'Lab Work',
+	'Presentations',
+	'Group Work',
+	'Field Trips',
+	'Homework',
+	'Class Participation',
+	'Reading',
+	'Research Papers',
+	'Essays',
+	'Online Discussions',
+	'Extracurricular Activities'
+]
 
 const Home = () => {
 	const [showModal, setShowModal] = useState(false)
@@ -24,9 +42,13 @@ const Home = () => {
 		setShowModal(current => !current)
 	}
 
+
+
 	return (
 		<Container style={{ paddingTop: '8vh', minHeight: '100vh' }} fluid>
 			{/* carousel */}
+
+
 			<Row>
 				<Carousel style={{ height: '60vh' }}>
 					<Carousel.Item style={{ height: '60vh' }}>

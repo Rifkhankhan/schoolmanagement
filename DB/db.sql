@@ -97,3 +97,37 @@ CREATE TABLE `updates` (
   `updateDate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`updateId`)
 );
+
+
+
+CREATE TABLE tasks (
+    taskId INT NOT NULL primary KEY AUTO_INCREMENT,
+    title TEXT NOT NULL,
+    category TEXT NOT NULL,
+    Description TEXT null,
+    dueDate varchar(100) NOT NULL,
+    userId INT not null,
+    classId int not null,
+      `filename` VARCHAR(255) DEFAULT NULL,
+  `filepath` VARCHAR(255) DEFAULT NULL,
+     `status` TINYINT(1) NOT NULL DEFAULT 1,
+     `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(userId),
+      FOREIGN KEY (classId) REFERENCES class(classId)
+);
+
+
+
+CREATE TABLE submittedtasks (
+    staskId INT NOT NULL  primary KEY AUTO_INCREMENT,
+	userId INT,
+    taskId int,
+      `filename` VARCHAR(255) DEFAULT NULL,
+  `filepath` VARCHAR(255) DEFAULT NULL,
+     `status` TINYINT(1) NOT NULL DEFAULT 1,
+     `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(userId),
+         FOREIGN KEY (taskId) REFERENCES tasks(taskId)
+);

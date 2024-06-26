@@ -37,6 +37,11 @@
 	}
 }
 
+.selectedHeader {
+	border-bottom: 2px solid white;
+	font-weight: bold;
+}
+
 .nav ul {
 	width: 100%;
 	list-style: none;

@@ -1,0 +1,10 @@
+.col:hover {
+	border-top: 1px solid white;
+}
+
+.selectedCol {
+	border-bottom: 1px solid white;
+	color: rgb(190, 228, 51);
+	height: 100%;
+	font-weight: bold;
+}
