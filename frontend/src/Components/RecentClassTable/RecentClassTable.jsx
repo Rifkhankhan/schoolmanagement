@@ -1,9 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './RecentClassTable.module.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { Button } from 'bootstrap'
-const RecentClassTable = ({ initialData, handleModel, getIdHandler }) => {
+const RecentClassTable = ({ classes }) => {
 	const [filter, setFilter] = useState('')
+	const [reverseClass, setReverseClass] = useState()
+
+	useEffect(() => {
+		const revArry = [...classes].reverse()
+
+		setReverseClass(revArry)
+	}, [classes])
 
 	const handleFilterChange = event => {
 		setFilter(event.target.value)
@@ -21,62 +28,26 @@ const RecentClassTable = ({ initialData, handleModel, getIdHandler }) => {
 			<table className="table table-hover thead-dark w-100 f-1">
 				<thead className="thead-dark">
 					<tr>
+						<th>#</th>
 						<th>Name</th>
 
-						<th>Index</th>
-						<th>Gurdian</th>
-						<th>Class</th>
-						<th>Village</th>
+						<th>Year</th>
+						<th>Boys</th>
+						<th>Girsl</th>
+						<th>Total</th>
 					</tr>
 				</thead>
 				<tbody>
-					{initialData?.map(
+					{reverseClass?.slice(0, 5).map(
 						(item, index) =>
 							item.name?.toLowerCase().includes(filter.toLowerCase()) && (
-								<tr
-									key={index}
-									onClick={() => {
-										handleModel()
-										getIdHandler(item?.id)
-									}}>
-									<td>{item?.name}</td>
-
-									<td
-										className={
-											item?.expansePermission === 'yes'
-												? 'bg-primary '
-												: 'bg-dark text-light'
-										}>
-										{item?.expansePermission === 'yes' ? 'Granted' : 'denied'}
-									</td>
-									<td
-										className={
-											item?.expanseDeletePermission === 'yes'
-												? 'bg-primary '
-												: 'bg-dark text-light'
-										}>
-										{item?.expanseDeletePermission === 'yes'
-											? 'Granted'
-											: 'denied'}
-									</td>
-									<td
-										className={
-											item?.receiptPermission === 'yes'
-												? 'bg-primary '
-												: 'bg-dark text-light'
-										}>
-										{item?.receiptPermission === 'yes' ? 'Granted' : 'denied'}
-									</td>
-									<td
-										className={
-											item?.receiptDeletePermission === 'yes'
-												? 'bg-primary '
-												: 'bg-dark text-light'
-										}>
-										{item?.receiptDeletePermission === 'yes'
-											? 'Granted'
-											: 'denied'}
-									</td>
+								<tr key={index}>
+									<td>{index + 1}</td>
+									<td>Grade {item?.name}</td>
+									<td>{item?.year}</td>
+									<td>{item?.countBoys}</td>
+									<td>{item?.countGirls}</td>
+									<td>{item?.totalStudents}</td>
 								</tr>
 							)
 					)}

@@ -1,6 +1,6 @@
 // table with date filter
 import styles from './StudentTable.module.css'
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -10,46 +10,22 @@ import image from './../../Images/kholi 48th century.PNG'
 import 'jspdf-autotable'
 import { converTime, exportPdf, handlePrint } from '../../Utils/Functions'
 import { Container, Row, Table } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
+import { getStudents } from '../../Actions/StudentActions'
 
 function StudentTable({
-	list,
+	students,
 	handleModel,
 	currentUser,
 	companies,
 	userCompanies,
 	selectedCompany
 }) {
-	// useLayoutEffect(() => {
-	// 	setInitialData([...calculateBalance()])
-	// 	setData([...calculateBalance()])
-	// }, [list])
-
-	// console.log(list)
-	// console.log(companies)
-	// console.log(userCompanies)
-
-	// Function to calculate balance
-	const calculateBalance = () => {
-		let balance = 0
-		return list?.map(transaction => {
-			// Update balance based on transaction type
-
-			if (
-				transaction.requestType === 'receipt' ||
-				transaction.requestForm === 'got'
-			) {
-				balance += +transaction.amount
-			} else {
-				balance -= +transaction.amount
-			}
-			// Add balance property to transaction object
-			return { ...transaction, balance }
-		})
-	}
+	const dispatch = useDispatch()
 
 	// State variables
 	const [initialData, setInitialData] = useState()
-	const [data, setData] = useState()
+	const [data, setData] = useState(students ?? [])
 	const [currentPage, setCurrentPage] = useState(1)
 	const [itemsPerPage, setItemsPerPage] = useState(5)
 	const [startDate, setStartDate] = useState(null)
@@ -130,49 +106,23 @@ function StudentTable({
 					<thead>
 						<tr>
 							<th>#</th>
-							<th>Date</th>
-							<th>Company</th>
+							<th>First Name</th>
+							<th>Last Name</th>
 
-							<th>Amount</th>
-							<th>Category</th>
-							<th>Sub Category</th>
-							<th>Payment Type</th>
-							<th>Balance</th>
+							<th>Class</th>
+							<th>Year</th>
+							<th>Create Date</th>
 						</tr>
 					</thead>
 					<tbody>
 						{currentItems?.map((item, index) => (
-							<tr
-								key={item}
-								onClick={() => {
-									handleModel(item)
-								}}>
+							<tr key={item}>
 								<td>{index + 1}</td>
-								<td>{new Date(item.date).toISOString().split('T')[0]}</td>
-								<td>
-									{companies.find(comp => comp.cid === item?.cid)?.name
-										? companies.find(comp => comp.cid === item?.cid)?.name
-										: 'None'}
-								</td>
-								<td style={{ textTransform: 'capitalize' }}>{item.amount}</td>
-								<td style={{ textTransform: 'capitalize' }}>
-									{item.requestType}
-								</td>
-								<td style={{ textTransform: 'capitalize' }}>
-									{item.requestForm === 'got'
-										? 'Received'
-										: item.requestForm === 'cash'
-										? 'Income'
-										: item.requestForm}
-								</td>
-								<td style={{ textTransform: 'capitalize' }}>
-									{item.methode === 'transfer'
-										? 'Bank Transfer'
-										: item.methode === 'deposite'
-										? 'Bank Deposite'
-										: item.methode}
-								</td>
-								<td style={{ textTransform: 'capitalize' }}>{item.balance}</td>
+								<td>{item?.firstName}</td>
+								<td>{item?.lastName}</td>
+								<td>{item?.classId}</td>
+								<td>{item?.year}</td>
+								<td>{item?.createdAt.slice(0, 10)}</td>
 							</tr>
 						))}
 					</tbody>

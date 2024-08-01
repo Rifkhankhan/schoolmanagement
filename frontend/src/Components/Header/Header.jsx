@@ -93,8 +93,8 @@ function Header({ showPrice }) {
 						selectedHeader === 'home' ||
 						selectedHeader === undefined
 							? styles.selectedHeader
-							: styles.hideOnMobile
-					}`}>
+							: ''
+					}${styles.hideOnMobile}`}>
 					<Link to="/" id="home" style={{ textDecorationLine: 'none' }}>
 						Home
 					</Link>
@@ -103,10 +103,8 @@ function Header({ showPrice }) {
 				{/* {isAuthenticated && currentUser.expansePermission === 'yes' && ( */}
 				<li
 					className={`${
-						selectedHeader === 'staff'
-							? styles.selectedHeader
-							: styles.hideOnMobile
-					}`}>
+						selectedHeader === 'staff' ? `${styles.selectedHeader} ` : ''
+					}${styles.hideOnMobile}`}>
 					<Link to="/staff" id="about">
 						Staff
 					</Link>
@@ -115,10 +113,8 @@ function Header({ showPrice }) {
 				{/* {isAuthenticated && currentUser.receiptPermission === 'yes' && ( */}
 				<li
 					className={`${
-						selectedHeader === 'student'
-							? styles.selectedHeader
-							: styles.hideOnMobile
-					}`}>
+						selectedHeader === 'staff' ? `${styles.selectedHeader} ` : ''
+					}${styles.hideOnMobile}`}>
 					<Link to="/student" id="services">
 						Students
 					</Link>
@@ -127,10 +123,8 @@ function Header({ showPrice }) {
 				{/* {isAuthenticated && currentUser.advancePermission === 'yes' && ( */}
 				<li
 					className={`${
-						selectedHeader === 'class'
-							? styles.selectedHeader
-							: styles.hideOnMobile
-					}`}>
+						selectedHeader === 'staff' ? `${styles.selectedHeader} ` : ''
+					}${styles.hideOnMobile}`}>
 					<Link to="/class" id="services">
 						Classes
 					</Link>
@@ -139,10 +133,8 @@ function Header({ showPrice }) {
 				{/* {isAuthenticated && currentUser.loanPermission === 'yes' && ( */}
 				<li
 					className={`${
-						selectedHeader === 'attendance'
-							? styles.selectedHeader
-							: styles.hideOnMobile
-					}`}>
+						selectedHeader === 'staff' ? `${styles.selectedHeader} ` : ''
+					}${styles.hideOnMobile}`}>
 					<Link to="/attendance" id="services">
 						Attendance
 					</Link>
@@ -150,10 +142,8 @@ function Header({ showPrice }) {
 
 				<li
 					className={`${
-						selectedHeader === 'task'
-							? styles.selectedHeader
-							: styles.hideOnMobile
-					}`}>
+						selectedHeader === 'staff' ? `${styles.selectedHeader} ` : ''
+					}${styles.hideOnMobile}`}>
 					<Link to="/task" id="services">
 						Tasks
 					</Link>
@@ -161,10 +151,8 @@ function Header({ showPrice }) {
 
 				<li
 					className={`${
-						selectedHeader === 'profile'
-							? styles.selectedHeader
-							: styles.hideOnMobile
-					}`}>
+						selectedHeader === 'staff' ? `${styles.selectedHeader} ` : ''
+					}${styles.hideOnMobile}`}>
 					<Link to="/profile" id="services">
 						Profile
 					</Link>
@@ -173,10 +161,8 @@ function Header({ showPrice }) {
 				{/* {isAuthenticated && currentUser.isAdmin === 1 && ( */}
 				<li
 					className={`${
-						selectedHeader === 'users'
-							? styles.selectedHeader
-							: styles.hideOnMobile
-					}`}>
+						selectedHeader === 'staff' ? `${styles.selectedHeader} ` : ''
+					}${styles.hideOnMobile}`}>
 					<Link to="/users" id="projects">
 						Users
 					</Link>
@@ -186,10 +172,8 @@ function Header({ showPrice }) {
 				{/* {isAuthenticated && ( */}
 				<li
 					className={`${
-						selectedHeader === 'staff'
-							? styles.selectedHeader
-							: styles.hideOnMobile
-					}`}>
+						selectedHeader === 'staff' ? `${styles.selectedHeader} ` : ''
+					}${styles.hideOnMobile}`}>
 					<Link to="/login" onClick={logOutHandler}>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"

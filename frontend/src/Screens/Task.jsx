@@ -11,19 +11,16 @@ import {
 	Row,
 	Table
 } from 'react-bootstrap'
-import { FaArrowRight, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 
-import image from './../Images/kholi 48th century.PNG'
 import { useNavigate, useNavigation, useParams } from 'react-router-dom'
-import { FaPlus } from 'react-icons/fa'
-// import { useGetClassesQuery } from '../store/ClassApiSlice'
-import { classes } from '../DummyData'
+
 import SubHeader from '../Components/SubHeader/SubHeader'
 import CreateTaskForm from '../Components/CreateTaskForm/CreateTaskForm'
 import RecentTaskTable from '../Components/RecentTaskTable/RecentTaskTable'
 import StudentTable from '../Components/StudentTable/StudentTable'
 import TaskTable from '../Components/TaskTable/TaskTable'
 import ShowTaskModal from '../Components/ShowTaskModal/ShowTaskModal'
+import { useGetClassesQuery } from '../store/classApiSlice'
 
 const Task = () => {
 	const navigate = useNavigate()
@@ -33,22 +30,14 @@ const Task = () => {
 
 	const { keyword, pageNumber } = useParams()
 
-	// const {
-	// 	data: classes,
-	// 	isLoading: isLoadingClass,
-	// 	error: classError
-	// } = useGetClassesQuery({
-	// 	keyword,
-	// 	pageNumber
-	// })
-
-	const ViewStudentHandler = () => {
-		navigate(`/student/${1}`)
-	}
-
-	const createStudentHandler = () => {
-		navigate('/student/add')
-	}
+	const {
+		data: classes,
+		isLoading: isLoadingClass,
+		error: classError
+	} = useGetClassesQuery({
+		keyword,
+		pageNumber
+	})
 
 	const handleModel = item => {
 		console.log(item)

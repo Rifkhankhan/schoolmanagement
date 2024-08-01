@@ -37,17 +37,13 @@ const activities = [
 const Home = () => {
 	const [showModal, setShowModal] = useState(false)
 	const [selectedData, setSelectedData] = useState()
-	console.log(selectedData)
 	const handleModel = () => {
 		setShowModal(current => !current)
 	}
 
-
-
 	return (
 		<Container style={{ paddingTop: '8vh', minHeight: '100vh' }} fluid>
 			{/* carousel */}
-
 
 			<Row>
 				<Carousel style={{ height: '60vh' }}>

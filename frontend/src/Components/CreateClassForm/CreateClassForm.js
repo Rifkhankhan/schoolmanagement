@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import styles from './CreateClassForm.module.css'
 import { useDispatch, useSelector } from 'react-redux'
-// import { createUser } from '../../Actions/userAction'
+import { useCreateClassMutation } from '../../store/classApiSlice'
+import { getClasses } from '../../store/classSlice'
+import { toast } from 'react-toastify'
+import { Container, Form, FormControl, Row } from 'react-bootstrap'
+import InputTag from '../InputTag'
+import SelectTag from '../SelectTag'
+
 const CreateClassForm = ({ header }) => {
+	const [createClass, { isLoading, isError, isSuccess }] =
+		useCreateClassMutation()
 	const [formValid, setFormValid] = useState(true)
-
 	const [formSubmit, setFormSubmit] = useState(false)
-
 	const dispatch = useDispatch()
 
 	// Initial state for inputs
@@ -21,9 +27,9 @@ const CreateClassForm = ({ header }) => {
 		countGirls: { value: null, isValid: true }
 	}
 
-	// Generate an array of years (e.g., from 2000 to current year)
+	// Generate an array of years (e.g., from 1950 to the current year)
 	const years = Array.from(
-		{ length: Number(new Date().getFullYear()) + 1 - 1950 },
+		{ length: new Date().getFullYear() + 1 - 1950 },
 		(_, i) => 1950 + i
 	)
 
@@ -36,180 +42,131 @@ const CreateClassForm = ({ header }) => {
 	}, [inputs])
 
 	const inputTextChangeHandler = (inputType, enteredValue) => {
-		setInputs(currentInputValue => {
-			return {
-				...currentInputValue,
-				[inputType]: { value: enteredValue, isValid: true }
-			}
-		})
+		setInputs(currentInputs => ({
+			...currentInputs,
+			[inputType]: { value: enteredValue, isValid: true }
+		}))
 	}
 
-	const submitHandler = () => {
+	const submitHandler = async () => {
 		const data = Object.fromEntries(
 			Object.entries(inputs).map(([key, input]) => [key, input.value])
 		)
 
 		const nameValid = data.name?.trim().length > 0
-		const yearValid =
-			data.year !== null && data.year !== undefined && !isNaN(data.year)
+		const yearValid = !isNaN(data.year) && +data.year > 0
 
 		if (!nameValid || !yearValid) {
-			setInputs(currentInputs => {
-				return {
-					...currentInputs,
-					name: { value: currentInputs.name.value, isValid: nameValid },
-					year: { value: +currentInputs.year.value, isValid: yearValid }
-				}
-			})
+			setInputs(currentInputs => ({
+				...currentInputs,
+				name: { value: currentInputs.name.value, isValid: nameValid },
+				year: { value: currentInputs.year.value, isValid: yearValid }
+			}))
 			return
 		}
 
-		console.log(data)
+		try {
+			const response = await createClass(data).unwrap()
 
-		// dispatch(createUser(data))
-		setFormSubmit(true)
-		setInputs(initialInputsState)
+			setFormSubmit(true)
+			setInputs(initialInputsState)
+
+			// Check if the response indicates success
+			if (response && response.success) {
+				dispatch(getClasses(response.classes))
+				toast.success('Created Successfully!', { autoClose: 2000 })
+			} else {
+				toast.error('Creation failed. Please try again.', { autoClose: 2000 })
+			}
+		} catch (err) {
+			toast.error('Error creating class', { autoClose: 2000 })
+		}
 	}
+
 	return (
-		<div className={`container ${styles.container} `}>
-			<h2 class="row col-md-12 col-sm-6" className={styles.header}>
-				Create Class
-			</h2>
+		<Container className={`container ${styles.container}`}>
+			<h2 className={styles.header}>Create Class</h2>
 			{!formValid && (
-				<div className="row ">
+				<div className="row">
 					<p
-						className="text-warning text-capitalize  "
+						className="text-warning text-capitalize"
 						style={{ fontSize: '2vh' }}>
 						Invalid Data Please check!
 					</p>
 				</div>
 			)}
-
-			<form class="form">
-				{/* forms row start */}
-				<div class="form-row row">
-					<div class="form-group col-12 col-md-6 mb-2">
-						<input
-							type="text"
-							class="form-control"
-							placeholder="Class Name"
-							id="name"
-							value={inputs.name.value}
-							onChange={e => inputTextChangeHandler('name', e.target.value)}
-						/>
-					</div>
-				</div>
-				<div class="form-row row">
-					{/* year */}
-					<div class="form-group col-12 col-md-6 mb-2">
-						<select
-							class="form-control"
-							value={inputs.year.value}
-							onChange={e => inputTextChangeHandler('year', e.target.value)}
-							id="inputGroupSelect01">
-							<option selected value="no">
-								Select Year
-							</option>
-
-							{years.map(year => (
-								<option value={year}>{year}</option>
-							))}
-						</select>
-					</div>
-
-					{/* teacher */}
-					<div class="form-group col-12 col-md-6 mb-2">
-						<select
-							class="form-control"
-							value={inputs.teacher.value}
-							onChange={e => inputTextChangeHandler('teacher', e.target.value)}
-							id="inputGroupSelect01">
-							<option selected value="no">
-								Select Class Teacher
-							</option>
-							{years.map(year => (
-								<option value={year}>{year}</option>
-							))}
-						</select>
-					</div>
-				</div>
-				<div class="form-row row">
-					{/* monitor */}
-
-					<div class="form-group col-12 col-md-6 mb-2">
-						<select
-							class="form-control"
-							value={inputs.moniter.value}
-							onChange={e => inputTextChangeHandler('moniter', e.target.value)}
-							id="inputGroupSelect01">
-							<option selected value="no">
-								Select Class Moniter
-							</option>
-							{years.map(year => (
-								<option value={year}>{year}</option>
-							))}
-						</select>
-					</div>
-					{/* totalStudents */}
-
-					<div class="form-group col-12 col-md-6 mb-2">
-						<input
-							type="number"
-							class="form-control"
-							placeholder="Total Students"
-							id="name"
-							value={inputs.totalStudents.value}
-							onChange={e =>
-								inputTextChangeHandler('totalStudents', e.target.value)
-							}
-						/>
-					</div>
-				</div>
-				<div class="form-row row">
-					{/* countBoys */}
-
-					<div class="form-group col-12 col-md-6 mb-2">
-						<input
-							type="number"
-							class="form-control"
-							placeholder="Total Boys"
-							id="name"
-							value={inputs.countBoys.value}
-							onChange={e =>
-								inputTextChangeHandler('countBoys', e.target.value)
-							}
-						/>
-					</div>
-					{/* countGirls */}
-
-					<div class="form-group col-12 col-md-6 mb-2">
-						<input
-							type="number"
-							class="form-control"
-							placeholder="Total Girls"
-							id="name"
-							value={inputs.countGirls.value}
-							onChange={e =>
-								inputTextChangeHandler('countGirls', e.target.value)
-							}
-						/>
-					</div>
-				</div>
-				<div class="form-row row">
-					<div class="col-md-2 col-sm-6 my-1">
-						<div class="form-group">
+			<Form>
+				<Row>
+					<InputTag
+						as="input"
+						type="text"
+						placeholder="Class Name"
+						value={inputs.name.value}
+						onChange={e => inputTextChangeHandler('name', e.target.value)}
+					/>
+				</Row>
+				<Row>
+					<SelectTag
+						placeholder="Select Year"
+						data={years}
+						value={inputs.year.value}
+						onChange={e => inputTextChangeHandler('year', e.target.value)}
+					/>
+					<SelectTag
+						placeholder="Select Class Teacher"
+						data={years}
+						value={inputs.teacher.value}
+						onChange={e => inputTextChangeHandler('teacher', e.target.value)}
+					/>
+				</Row>
+				<Row className="form-row row">
+					<SelectTag
+						placeholder="Select Class Moniter"
+						data={years}
+						value={inputs.moniter.value}
+						onChange={e => inputTextChangeHandler('moniter', e.target.value)}
+					/>
+					<InputTag
+						as="input"
+						type="number"
+						placeholder="Total Students"
+						value={inputs.totalStudents.value}
+						onChange={e =>
+							inputTextChangeHandler('totalStudents', e.target.value)
+						}
+					/>
+				</Row>
+				<Row className="form-row row">
+					<InputTag
+						as="input"
+						type="number"
+						placeholder="Total Boys"
+						value={inputs.countBoys.value}
+						onChange={e => inputTextChangeHandler('countBoys', e.target.value)}
+					/>
+					<InputTag
+						as="input"
+						type="number"
+						placeholder="Total Girls"
+						value={inputs.countGirls.value}
+						onChange={e => inputTextChangeHandler('countGirls', e.target.value)}
+					/>
+				</Row>
+				<Row className="form-row row">
+					<div className="col-md-2 col-sm-6 my-1">
+						<div className="form-group">
 							<button
 								type="button"
-								className="btn btn-warning "
-								onClick={submitHandler}>
+								className="btn btn-warning"
+								onClick={submitHandler}
+								disabled={isLoading}>
 								Submit
 							</button>
 						</div>
 					</div>
-				</div>
-				)
-			</form>
-		</div>
+				</Row>
+			</Form>
+		</Container>
 	)
 }
 

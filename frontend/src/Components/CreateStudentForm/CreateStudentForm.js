@@ -1,22 +1,34 @@
 import React, { useEffect, useState } from 'react'
 import styles from './CreateStudentForm.module.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { Col, Form, Row } from 'react-bootstrap'
-// import { createUser } from '../../Actions/userAction'
+// import { useCreateClassMutation } from '../../store/studet'
+import { getClasses } from '../../store/classSlice'
+import { toast } from 'react-toastify'
+import { Container, Form, FormControl, FormSelect, Row } from 'react-bootstrap'
+import InputTag from '../InputTag'
+import SelectTag from '../SelectTag'
+import { getRoles } from '../../Actions/AuthAction'
+import { createStudent } from '../../Actions/StudentActions'
+import { useGetClassesQuery } from './../../store/classApiSlice'
 const CreateStudentForm = ({ header }) => {
 	const [formValid, setFormValid] = useState(true)
-	// const notification = useSelector(state => state.customer.notification)
+	const roles = useSelector(state => state.auth.roles)
+	const { data: classes, isLoading, isError } = useGetClassesQuery()
+
 	const [formSubmit, setFormSubmit] = useState(false)
+
 	const dispatch = useDispatch()
+
+	useEffect(() => {
+		dispatch(getRoles())
+	}, [])
 	// Initial state for inputs
 	const initialInputsState = {
 		firstName: { value: '', isValid: true },
 		lastName: { value: '', isValid: true },
 		narration: { value: '', isValid: true },
-		phone: { value: '', isValid: true },
-		address: { value: [], isValid: true },
-		town: { value: '', isValid: true },
-		dob: { value: '', isValid: true }
+		roleId: { value: '', isValid: true },
+		classId: { value: '', isValid: true }
 	}
 
 	// State for inputs
@@ -42,15 +54,16 @@ const CreateStudentForm = ({ header }) => {
 		)
 
 		const firstNameValid = data.firstName?.trim().length > 0
-		const lastNameValid = data.lastName?.trim().length > 0
-		const phoneValid =
-			data.phone?.trim().length > 9 && data.phone?.trim().length <= 10
+		const roleValid = Number.isInteger(+data.roleId) && +data.roleId > 0
 
-		if (!firstNameValid || !lastNameValid || !phoneValid) {
+		const classValid = Number.isInteger(+data.classId) && +data.classId > 0
+		const lastNameValid = data.lastName?.trim().length > 0
+
+		if (!firstNameValid || !lastNameValid || !roleValid || !classValid) {
 			setInputs(currentInputs => {
 				return {
 					...currentInputs,
-					name: {
+					firstName: {
 						value: currentInputs.firstName.value,
 						isValid: firstNameValid
 					},
@@ -58,9 +71,13 @@ const CreateStudentForm = ({ header }) => {
 						value: currentInputs.lastName.value,
 						isValid: lastNameValid
 					},
-					phone: {
-						value: currentInputs.phone.value,
-						isValid: phoneValid
+					classId: {
+						value: currentInputs.classId.value,
+						isValid: classValid
+					},
+					roleId: {
+						value: currentInputs.roleId.value,
+						isValid: roleValid
 					}
 				}
 			})
@@ -68,7 +85,7 @@ const CreateStudentForm = ({ header }) => {
 			return
 		}
 
-		// dispatch(createUser(data))
+		dispatch(createStudent(data))
 		setFormSubmit(true)
 		setInputs(initialInputsState)
 	}
@@ -115,47 +132,46 @@ const CreateStudentForm = ({ header }) => {
 					</Form.Group>
 				</Row>
 				<Row>
-					<Form.Group controlId="phone" className="col-12 col-md-6 mb-2">
-						<Form.Control
-							as="input"
-							type="number"
-							class="form-control"
-							placeholder="phone"
-							value={inputs.phone.value}
-							onChange={e => inputTextChangeHandler('phone', e.target.value)}
-						/>
+					<Form.Group className="col-12 col-md-6 mb-2">
+						<Form.Select
+							value={inputs.roleId.value}
+							onChange={e => inputTextChangeHandler('roleId', e.target.value)}>
+							<option value={0}>Select Role</option>
+
+							{roles.map(role => (
+								<option value={role.roleId} key={role.roleId}>
+									{role.roleName}
+								</option>
+							))}
+						</Form.Select>
 					</Form.Group>
 
-					<Form.Group controlId="address" className="col-12 col-md-6 mb-2">
-						<Form.Control
-							as="input"
-							type="text"
-							class="form-control"
-							placeholder="Address"
-							value={inputs.address.value}
-							onChange={e => inputTextChangeHandler('address', e.target.value)}
-						/>
+					<Form.Group className="col-12 col-md-6 mb-2">
+						<Form.Select
+							value={inputs.classId.value}
+							onChange={e => inputTextChangeHandler('classId', e.target.value)}>
+							<option value={0}>Select Class</option>
+
+							{classes.map(role => (
+								<option value={role.classId} key={role.classId}>
+									{role.year} : {role.name}
+								</option>
+							))}
+						</Form.Select>
 					</Form.Group>
 				</Row>
 				<Row>
-					<Form.Group controlId="town" className="col-12 col-md-6 mb-2">
+					<Form.Group>
 						<Form.Control
-							as="input"
+							as="textarea"
 							type="text"
+							rows={3}
 							class="form-control"
-							placeholder="Town"
-							value={inputs.town.value}
-							onChange={e => inputTextChangeHandler('town', e.target.value)}
-						/>
-					</Form.Group>
-
-					<Form.Group controlId="DOB" className="col-12 col-md-6 mb-2">
-						<Form.Control
-							as="input"
-							type="date"
-							placeholder="DOB"
-							value={inputs.dob.value}
-							onChange={e => inputTextChangeHandler('dob', e.target.value)}
+							placeholder="narration"
+							value={inputs.narration.value}
+							onChange={e =>
+								inputTextChangeHandler('narration', e.target.value)
+							}
 						/>
 					</Form.Group>
 				</Row>

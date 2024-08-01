@@ -220,3 +220,21 @@ export const handlePrint = (title, companies, selectedCompany) => {
 	) // Print when fully loaded
 	printWindow.document.write('</body></html>')
 }
+
+// Function to separate data by year
+export function separateDataByYear(classes) {
+	// Initialize an empty object for dataByYear
+	const dataByYear = {}
+
+	// Iterate through classes and categorize by year
+	classes?.forEach(cls => {
+		// Check if the year key exists in dataByYear, if not, initialize it
+		if (!dataByYear[cls.year]) {
+			dataByYear[cls.year] = []
+		}
+		dataByYear[cls.year].push(cls)
+	})
+
+	// Return an array of arrays, one for each year
+	return Object.values(dataByYear)
+}

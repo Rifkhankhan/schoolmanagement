@@ -1,7 +1,7 @@
 import { apiSlice } from './apiSlice'
 import { CLASSESS_URL } from '../constants'
 
-export const classApiSlice = apiSlice.injectEndpoints({
+export const studentApiSlice = apiSlice.injectEndpoints({
 	endpoints: builder => ({
 		// getClasses: builder.query({
 		// 	query: ({ keyword, pageNumber }) => ({
@@ -14,7 +14,7 @@ export const classApiSlice = apiSlice.injectEndpoints({
 		// 	keepUnusedDataFor: 5,
 		// 	providesTags: ['Class']
 		// }),
-		getClasses: builder.query({
+		getStudentes: builder.query({
 			query: () => ({
 				url: CLASSESS_URL
 			}),
@@ -28,14 +28,14 @@ export const classApiSlice = apiSlice.injectEndpoints({
 		// 	keepUnusedDataFor: 5,
 		// 	providesTags: ['Product']
 		// }),
-		getClass: builder.query({
+		getStudent: builder.query({
 			query: id => ({
 				url: `${CLASSESS_URL}/${id}`
 			}),
 			keepUnusedDataFor: 5
 		}),
 
-		createClass: builder.mutation({
+		createStudent: builder.mutation({
 			query: data => ({
 				url: CLASSESS_URL,
 				method: 'POST',
@@ -44,7 +44,7 @@ export const classApiSlice = apiSlice.injectEndpoints({
 			keepUnusedDataFor: 5,
 			invalidatesTags: ['Class']
 		}),
-		updateClass: builder.mutation({
+		updateStudent: builder.mutation({
 			query: data => ({
 				url: `${CLASSESS_URL}/${data.classId}`,
 				method: 'PUT',
@@ -61,7 +61,7 @@ export const classApiSlice = apiSlice.injectEndpoints({
 		// 	}),
 		// 	keepUnusedDataFor: 5
 		// }),
-		deleteClass: builder.mutation({
+		deleteStudent: builder.mutation({
 			query: id => ({
 				url: `${CLASSESS_URL}/${id}`,
 				method: 'DELETE'
@@ -81,12 +81,12 @@ export const classApiSlice = apiSlice.injectEndpoints({
 })
 
 export const {
-	useGetClassQuery,
-	useGetClassesQuery,
-	useCreateClassMutation,
-	useUpdateClassMutation,
+	useGetStudentQuery,
+	useGetStudentesQuery,
+	useCreateStudentMutation,
+	useUpdateStudentMutation,
 	// useUploadMutation,
-	useDeleteClassMutation
+	useDeleteStudentMutation
 	// useReviewMutation,
 	// useGetTopProductsQuery
-} = classApiSlice
+} = studentApiSlice

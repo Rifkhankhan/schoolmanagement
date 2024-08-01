@@ -37,11 +37,6 @@
 	}
 }
 
-.selectedHeader {
-	border-bottom: 2px solid white;
-	font-weight: bold;
-}
-
 .nav ul {
 	width: 100%;
 	list-style: none;
@@ -112,7 +107,10 @@
 .nav li:nth-child(3) {
 	margin-right: auto;
 }
-
+.selectedHeader {
+	border-bottom: 2px solid white;
+	font-weight: bold;
+}
 .showOnMobile {
 	display: none !important;
 	display: flex;

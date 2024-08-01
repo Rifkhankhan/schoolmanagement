@@ -9,6 +9,17 @@ const { CreateCompany } = require('./CompanyController')
 
 const pool = require('../MysqlConnection')
 
+// get user roles
+
+exports.getRoles = asyncHandler(async (req, res) => {
+	try {
+		const [roles] = await pool.query('select *from roles')
+
+		res.json({ success: true, roles: roles })
+	} catch (error) {
+		res.json({ success: false })
+	}
+})
 // user sign in controller
 exports.usersignin = asyncHandler(async (req, res) => {
 	const { name, password } = req.body
@@ -196,19 +207,6 @@ exports.autoLogin = asyncHandler(async (req, res) => {
 		res
 			.status(500)
 			.json({ message: 'Something went wrong', error: error.message })
-	}
-})
-// Function to create a new user
-exports.createUser = asyncHandler(async (req, res, next) => {
-	try {
-		const { name, email } = req.body
-		const [result] = await pool.query(
-			'INSERT INTO users (name, email) VALUES (?, ?)',
-			[name, email]
-		)
-		res.status(201).json({ success: true, userId: result.insertId })
-	} catch (error) {
-		next(error)
 	}
 })
 

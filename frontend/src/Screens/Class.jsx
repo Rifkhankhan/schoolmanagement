@@ -12,11 +12,14 @@ import {
 import image from './../Images/kholi 48th century.PNG'
 import { useNavigate, useNavigation, useParams } from 'react-router-dom'
 import { FaPlus } from 'react-icons/fa'
+import LoadingSpinner from './../Components/LoadingSpinner/LoadingSpinner'
 // import { useGetClassesQuery } from '../store/ClassApiSlice'
-import { classes } from './../DummyData'
+// import { classes } from './../DummyData'
 import img1 from './../assets/annie-spratt-dWYU3i-mqEo-unsplash.jpg'
 import img2 from './../assets/dmitry-chernyshov-mP7aPSUm7aE-unsplash.jpg'
 import img3 from './../assets/huy-nguyen-YhP-E5YwOGE-unsplash.jpg'
+import { useGetClassesQuery } from '../store/classApiSlice'
+import { separateDataByYear } from '../Utils/Functions'
 const Class = () => {
 	const navigate = useNavigate()
 	const [showYear, setShowYear] = useState(false)
@@ -25,43 +28,24 @@ const Class = () => {
 	const [showBatch, setShowBatch] = useState(false)
 	const { keyword, pageNumber } = useParams()
 
-	// const {
-	// 	data: classes,
-	// 	isLoading: isLoadingClass,
-	// 	error: classError
-	// } = useGetClassesQuery({
-	// 	keyword,
-	// 	pageNumber
-	// })
+	const {
+		data: classes,
+		refetch,
+		isLoading,
+		error,
+		isSuccess
+	} = useGetClassesQuery()
+
+	// } = useGetClassesQuery({keyword,		pageNumber	})
 
 	// Assuming 'classes' array is defined as per your example
 
 	// Function to separate data by year
-	function separateDataByYear(classes) {
-		// Initialize arrays for each year
-		const dataByYear = {
-			2022: [],
-			2023: []
-		}
-
-		// Iterate through classes and categorize by year
-		classes.forEach(cls => {
-			if (cls.year === 2022) {
-				dataByYear[2022].push(cls)
-			} else if (cls.year === 2023) {
-				dataByYear[2023].push(cls)
-			}
-			// You can add more conditions for other years if needed
-		})
-
-		// Return an array of arrays, one for each year
-		return Object.values(dataByYear)
-	}
 
 	// Separate the 'classes' array by year
 	const separatedData = separateDataByYear(classes)
 
-	const filteredData = classes.filter(data => data.year === selectedYear)
+	const filteredData = classes?.filter(data => data.year === selectedYear)
 
 	const ViewStudentHandler = () => {
 		navigate(`/student/${1}`)
@@ -116,84 +100,88 @@ const Class = () => {
 					</Carousel.Item>
 				</Carousel>
 			</Row>
-			<Row className="mt-3">
-				{!showBatch && !showYear && (
-					<Table striped hover>
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>Year</th>
-								<th>Classes</th>
-								<th>Total Students</th>
-							</tr>
-						</thead>
-						<tbody>
-							{separatedData.map((data, index) =>
-								data.slice(0, 1).map(dat => (
-									<tr
-										onClick={() => {
-											setShowYear(prev => !prev)
-											setSelectedYear(data[0].year)
-										}}>
-										<td>{index + 1}</td>
-										<td>{dat.year}</td>
-										<td>
-											{data.map((da, ind) => {
-												if (ind + 1 !== data.length) {
-													return da.name + ','
-												} else {
-													return da.name
-												}
-											})}
-										</td>
-										<td>
-											{data.reduce((total, cls) => {
-												return total + +cls.totalStudents
-											}, 0)}
-										</td>
-									</tr>
-								))
-							)}
-						</tbody>
-					</Table>
-				)}
 
-				{!showBatch && showYear && (
-					<Row>
-						<h3>{selectedYear} Batch</h3>
-						<Table striped hover>
+			{isLoading && <LoadingSpinner />}
+			{!isLoading && (
+				<Row className="mt-3">
+					{!showBatch && !showYear && (
+						<Table striped hover className="table-dark">
 							<thead>
 								<tr>
 									<th>#</th>
+									<th>Year</th>
 									<th>Classes</th>
-									<th>Girls</th>
-									<th>Boys</th>
 									<th>Total Students</th>
 								</tr>
 							</thead>
 							<tbody>
-								{filteredData.map((data, index) => (
-									<tr
-										key={index}
-										onClick={() => {
-											setShowBatch(prev => !prev)
-											setSelectedClass(data.name)
-										}}>
-										<td>{index + 1}</td>
-										<td>{data.name}</td>
-										<td>{data.countGirls}</td>
-										<td>{data.countBoys}</td>
-										<td>{data.totalStudents}</td>
-									</tr>
-								))}
+								{separatedData.map((data, index) =>
+									data.slice(0, 1).map(dat => (
+										<tr
+											onClick={() => {
+												setShowYear(prev => !prev)
+												setSelectedYear(data[0].year)
+											}}>
+											<td>{index + 1}</td>
+											<td>{dat.year}</td>
+											<td>
+												{data.map((da, ind) => {
+													if (ind + 1 !== data.length) {
+														return da.name + ','
+													} else {
+														return da.name
+													}
+												})}
+											</td>
+											<td>
+												{data.reduce((total, cls) => {
+													return total + +cls.totalStudents
+												}, 0)}
+											</td>
+										</tr>
+									))
+								)}
 							</tbody>
 						</Table>
-					</Row>
-				)}
-			</Row>
+					)}
+
+					{!showBatch && showYear && (
+						<Row>
+							<h3>{selectedYear} Batch</h3>
+							<Table striped hover className="table-dark">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>Classes</th>
+										<th>Girls</th>
+										<th>Boys</th>
+										<th>Total Students</th>
+									</tr>
+								</thead>
+								<tbody>
+									{filteredData.map((data, index) => (
+										<tr
+											key={index}
+											onClick={() => {
+												setShowBatch(prev => !prev)
+												setSelectedClass(data.name)
+											}}>
+											<td>{index + 1}</td>
+											<td>{data.name}</td>
+											<td>{data.countGirls}</td>
+											<td>{data.countBoys}</td>
+											<td>{data.totalStudents}</td>
+										</tr>
+									))}
+								</tbody>
+							</Table>
+						</Row>
+					)}
+				</Row>
+			)}
 
 			{/* need to show student for this {selectedYear} {selectedClass}*/}
-			{showBatch && showYear && (
+			{showBatch && showYear && !isLoading && (
 				<Row className="my-2 mx-auto">
 					<h3>
 						{selectedYear} Class : {selectedClass}

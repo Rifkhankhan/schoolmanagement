@@ -1,6 +1,6 @@
 // table with date filter
 import styles from './ClassTable.module.css'
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -9,18 +9,18 @@ import image from './../../Images/kholi 48th century.PNG'
 
 import 'jspdf-autotable'
 import { converTime, exportPdf, handlePrint } from '../../Utils/Functions'
-import { classes } from './../../DummyData'
+// import { classes } from './../../DummyData'
 import { Container, Row, Table } from 'react-bootstrap'
+import { useGetClassesQuery } from '../../store/classApiSlice'
+import { useSelector } from 'react-redux'
 
-function ClassTable({
-	list,
-	handleModel,
-	currentUser,
-	companies,
-	userCompanies,
-	selectedCompany
-}) {
-	const [data, setData] = useState(classes)
+function ClassTable({ classes, handleModel, companies, selectedCompany }) {
+	const [data, setData] = useState(classes ?? [])
+
+	useEffect(() => {
+		setData(classes)
+	}, [classes])
+
 	const [currentPage, setCurrentPage] = useState(1)
 	const [itemsPerPage, setItemsPerPage] = useState(5)
 

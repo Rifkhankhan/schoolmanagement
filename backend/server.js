@@ -5,9 +5,8 @@ const cors = require('cors')
 const mysql = require('mysql')
 const dotenv = require('dotenv')
 const userrouter = require('./Routes/userrouter')
-const AccountRequestRouter = require('./Routes/AccountRequestRouter')
-const RequestRouter = require('./Routes/RequestRouter')
-const CompanyRouter = require('./Routes/CompanyRouter')
+const ClassRouter = require('./Routes/ClassRouter')
+const StudentRouter = require('./Routes/StudentRouter')
 const cookieParser = require('cookie-parser')
 
 dotenv.config()
@@ -39,9 +38,8 @@ app.use(cors(corsOptions))
 // Define Routes
 // Define your routes here
 app.use('/user', userrouter)
-app.use('/accountRequest', AccountRequestRouter)
-app.use('/requests', RequestRouter)
-app.use('/company', CompanyRouter)
+app.use('/class', ClassRouter)
+app.use('/student', StudentRouter)
 // Express Server
 const server = app.listen(PORT, () => {
 	console.log(`Server is running on port ${PORT}`)

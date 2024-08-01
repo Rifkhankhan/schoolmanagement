@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
 	Button,
 	Card,
@@ -14,8 +14,16 @@ import UsersTable from '../Components/UsersTable/UsersTable'
 import SummaryTable from '../Components/SummaryTable/SummaryTable'
 import RecentStudentTable from '../Components/RecentStudentTable/RecentStudentTable'
 import StudentTable from '../Components/StudentTable/StudentTable'
+import { getStudents } from '../Actions/StudentActions'
+import { useDispatch, useSelector } from 'react-redux'
 
 const CreateStudent = () => {
+	const dispatch = useDispatch()
+	const students = useSelector(state => state.student.students)
+
+	useEffect(() => {
+		dispatch(getStudents())
+	}, [students])
 	return (
 		<Container
 			fluid
@@ -33,7 +41,7 @@ const CreateStudent = () => {
 			</Row>
 
 			<Row>
-				<StudentTable />
+				<StudentTable students={students} />
 			</Row>
 		</Container>
 	)

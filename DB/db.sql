@@ -35,6 +35,8 @@ CREATE TABLE `users` (
   `filepath` VARCHAR(255) DEFAULT NULL,
   `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `deletedAt` TIMESTAMP NULL DEFAULT NULL,
+  `email` text DEFAULT null,
+    `password` text NOT NULL,
   PRIMARY KEY (`userId`),
   FOREIGN KEY (`roleId`) REFERENCES `roles`(`roleId`) ON DELETE CASCADE ON UPDATE CASCADE
 );
